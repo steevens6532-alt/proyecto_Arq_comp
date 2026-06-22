@@ -463,6 +463,30 @@ body {
 .lb-item.on-led   { border-color: #ff6b6b66; }
 .lb-item.on-buzz  { border-color: #b07eff66; }
 
+.ctrl-btn {
+  margin-top: 4px;
+  background: var(--dim);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all .2s;
+  width: 100%;
+}
+
+.ctrl-btn:hover { background: var(--border); }
+.ctrl-btn:active { transform: scale(.96); }
+
+.ctrl-btn.is-on {
+  background: var(--green-bg);
+  border-color: #22d67a55;
+  color: var(--green);
+}
+
 .lb-icon {
   font-size: 28px;
   transition: filter .4s;
@@ -722,11 +746,13 @@ body {
         <div class="lb-icon">💡</div>
         <div class="lb-name">LED</div>
         <span class="badge muted lb-state" id="ledBadge">Apagado</span>
+        <button class="ctrl-btn" id="ledBtn" onclick="toggleLED()">Encender</button>
       </div>
       <div class="lb-item" id="buzzItem">
         <div class="lb-icon">🔔</div>
         <div class="lb-name">Buzzer</div>
         <span class="badge muted lb-state" id="buzzBadge">Silencio</span>
+        <button class="ctrl-btn" id="buzzBtn" onclick="toggleBuzzer()">Encender</button>
       </div>
     </div>
   </div>
@@ -889,10 +915,14 @@ function render() {
     ledItem.classList.add('on-led');
     ledBadge.className = 'badge red lb-state';
     ledBadge.textContent = 'Encendido';
+    document.getElementById('ledBtn').textContent = 'Apagar';
+    document.getElementById('ledBtn').classList.add('is-on');
   } else {
     ledItem.className = 'lb-item';
     ledBadge.className = 'badge muted lb-state';
     ledBadge.textContent = 'Apagado';
+    document.getElementById('ledBtn').textContent = 'Encender';
+    document.getElementById('ledBtn').classList.remove('is-on');
   }
 
   // Buzzer
@@ -905,11 +935,15 @@ function render() {
     buzzBadge.style.background = '#1a0a2a';
     buzzBadge.style.borderColor = '#b07eff44';
     buzzBadge.textContent = '🔔 Sonando';
+    document.getElementById('buzzBtn').textContent = 'Apagar';
+    document.getElementById('buzzBtn').classList.add('is-on');
   } else {
     buzzItem.className = 'lb-item';
     buzzBadge.className = 'badge muted lb-state';
     buzzBadge.style = '';
     buzzBadge.textContent = 'Silencio';
+    document.getElementById('buzzBtn').textContent = 'Encender';
+    document.getElementById('buzzBtn').classList.remove('is-on');
   }
 
   // Stats
@@ -995,9 +1029,10 @@ function simReset() {
 
 // ── WEBSOCKET REAL ──
 let pirAnterior = false;
+let ws = null;   // referencia global para poder enviar comandos
 
 function conectarWS() {
-  const ws = new WebSocket("ws://localhost:8765");
+  ws = new WebSocket("ws://localhost:8765");
 
   // Actualiza badge de conexión
   const badge = document.querySelector('.conn-badge');
@@ -1032,18 +1067,52 @@ function conectarWS() {
 
     pirAnterior = data.pir;
 
-    // Alerta especial
-    // Alerta especial — solo una vez
-    if (data.alerta === 'dispensando' && !state.yaDispensando) {
-    state.yaDispensando = true;
-    state.feeds++;
-    addLog('<strong>Dispensando comida</strong>', 'var(--yellow)', '⚙️');
+    // ── Nivel de comida (NIVEL:lleno / medio / vacio) ──
+    if (data.nivel) {
+      const nivelAnterior = state.nivelActual;
+      state.nivelActual = data.nivel;
+
+      if (data.nivel === 'lleno') {
+        state.foodPct = 80;
+        state.sensorHigh = true;
+        state.sensorLow = true;
+      } else if (data.nivel === 'medio') {
+        state.foodPct = 40;
+        state.sensorHigh = false;
+        state.sensorLow = true;
+      } else if (data.nivel === 'vacio') {
+        state.foodPct = 5;
+        state.sensorHigh = false;
+        state.sensorLow = false;
+      }
+
+      // Solo registra en el log cuando cambia de estado
+      if (nivelAnterior && nivelAnterior !== data.nivel) {
+        if (data.nivel === 'vacio') addLog('<strong>¡Sin comida!</strong> Ambos sensores sin detección', 'var(--red)', '🚨');
+        else if (data.nivel === 'medio') addLog('Nivel de comida medio — considera recargar', 'var(--yellow)', '📦');
+        else addLog('Tolva recargada — nivel lleno', 'var(--green)', '📦');
+      }
     }
 
-  // Resetea cuando el PIR se apaga
-  if (!data.pir) {
-  state.yaDispensando = false;
-  }
+    // ── Estado del servo (SERVO:cerrado, o inferido como "abierto") ──
+    if (data.servo === 'abierto') {
+      state.servoOpen = true;
+    } else if (data.servo === 'cerrado') {
+      state.servoOpen = false;
+    }
+
+    // Alerta especial — usa alerta_id para procesar solo eventos NUEVOS
+    if (data.alerta_id && data.alerta_id !== state.ultimoAlertaId) {
+      state.ultimoAlertaId = data.alerta_id;
+
+      if (data.alerta === 'dispensando') {
+        state.feeds++;
+        addLog('<strong>Dispensando comida</strong>', 'var(--yellow)', '⚙️');
+      }
+      if (data.alerta === 'sincomida') {
+        addLog('<strong>Intento de alimentar sin comida</strong> — servo no se activó', 'var(--red)', '⚠️');
+      }
+    }
 
     render();
   };
@@ -1059,6 +1128,27 @@ function conectarWS() {
   ws.onerror = () => {
     addLog('Error de conexión — ¿está corriendo bridge.py?', 'var(--red)', '❌');
   };
+}
+
+// ── CONTROL MANUAL (LED y Buzzer) ──
+function enviarComando(comando) {
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ comando }));
+  } else {
+    addLog('No se pudo enviar el comando — sin conexión al Arduino', 'var(--red)', '⚠️');
+  }
+}
+
+function toggleLED() {
+  const nuevoEstado = !state.led;
+  enviarComando(nuevoEstado ? 'LED_ON' : 'LED_OFF');
+  addLog(nuevoEstado ? 'LED encendido manualmente' : 'LED apagado manualmente', 'var(--red)', '💡');
+}
+
+function toggleBuzzer() {
+  const nuevoEstado = !state.buzzer;
+  enviarComando(nuevoEstado ? 'BUZZ_ON' : 'BUZZ_OFF');
+  addLog(nuevoEstado ? 'Buzzer encendido manualmente' : 'Buzzer apagado manualmente', 'var(--purple)', '🔔');
 }
 
 // Init
