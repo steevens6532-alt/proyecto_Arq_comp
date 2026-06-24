@@ -1,0 +1,15 @@
+# ============================================
+# docker-compose.yml - PetFeeder Bridge (Windows)
+# ============================================
+# En Windows, Docker Desktop (WSL2) no puede acceder directamente
+# al puerto COM del Arduino. Este compose sirve para construir y
+# probar el contenedor/WebSocket, pero el bridge no podrá conectarse
+# al Arduino real desde aquí. Para eso, usa la versión de Linux.
+
+services:
+  bridge:
+    build: .
+    container_name: petfeeder-bridge
+    ports:
+      - "8765:8765"
+    restart: unless-stopped

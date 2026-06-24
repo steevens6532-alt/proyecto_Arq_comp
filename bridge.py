@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 
 # ── Configuración ──────────────────────────
-PUERTO  = os.environ.get("ARDUINO_PORT", "COM3")  # Linux: /dev/ttyACM0 o /dev/ttyUSB0  Windows: COM3
+PUERTO  = os.environ.get("ARDUINO_PORT", "/dev/ttyACM0")  # Linux: /dev/ttyACM0 o /dev/ttyUSB0  Windows: COM3
 BAUDIOS = 9600
 WS_PORT = 8765
 # ───────────────────────────────────────────
@@ -124,8 +124,8 @@ async def manejar_cliente(ws):
         print(f"[WS] Cliente desconectado. Total: {len(clientes)}")
 
 async def main():
-    print(f"[WS] Servidor en ws://localhost:{WS_PORT}")
-    async with websockets.serve(manejar_cliente, "localhost", WS_PORT):
+    print(f"[WS] Servidor en ws://0.0.0.0:{WS_PORT}")
+    async with websockets.serve(manejar_cliente, "0.0.0.0", WS_PORT):
         await leer_serial()
 
 if __name__ == "__main__":
