@@ -3,96 +3,119 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PetFeeder Dashboard</title>
+<title>PetFeeder · UTP</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 :root {
-  --bg:       #0a0e13;
-  --s1:       #111720;
-  --s2:       #171f2b;
-  --border:   #1e2a38;
-  --text:     #e2eaf4;
-  --muted:    #526070;
-  --dim:      #2a3a4a;
+  --bg:        #0c0a09;
+  --s1:        #161210;
+  --s2:        #1e1916;
+  --border:    #2c2521;
+  --text:      #f2ece6;
+  --muted:     #8a7e74;
+  --dim:       #3a312b;
 
-  --green:    #22d67a;
-  --green-bg: #0a2a1a;
-  --yellow:   #f5c842;
-  --yellow-bg:#2a2200;
-  --red:      #ff4f4f;
-  --red-bg:   #2a0a0a;
-  --blue:     #4fa3ff;
-  --blue-bg:  #0a1a2a;
-  --purple:   #b07eff;
+  --utp-red:    #c0263a;
+  --gold:       #e8b339;
+  --green:      #2fbf6f;
+  --green-bg:   #0d2418;
+  --amber:      #e8b339;
+  --amber-bg:   #2e2308;
+  --red:        #e6473f;
+  --red-bg:     #2a0e0c;
+  --blue:       #5b9bd9;
+  --blue-bg:    #0e1f2c;
+  --purple:     #a787e0;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(192,38,58,0.10), transparent),
+    radial-gradient(ellipse 700px 500px at 100% 10%, rgba(232,179,57,0.06), transparent);
   color: var(--text);
   font-family: 'Space Grotesk', sans-serif;
   min-height: 100vh;
   padding: 0;
 }
 
-/* ── TOPBAR ── */
-.topbar {
-  background: var(--s1);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.masthead {
+  background: linear-gradient(180deg, var(--s1), var(--bg));
+  border-bottom: 2px solid var(--utp-red);
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
-.topbar-left {
+.masthead-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 14px 24px;
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.logo-icon {
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, #22d67a22, #22d67a44);
-  border: 1px solid #22d67a44;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-
-.topbar h1 {
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
-}
-
-.topbar h1 span { color: var(--green); }
-
-.topbar-right {
-  display: flex;
-  align-items: center;
+  justify-content: space-between;
   gap: 16px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand img {
+  height: 34px;
+  width: auto;
+  display: block;
+  background: #ffffff;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+.brand-divider {
+  width: 1px;
+  height: 30px;
+  background: var(--dim);
+}
+
+.brand-text .course {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.brand-text h1 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  margin-top: 1px;
+}
+
+.brand-text h1 span { color: var(--utp-red); }
+
+.masthead-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
 .conn-badge {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   font-family: 'Space Mono', monospace;
   font-size: 11px;
   color: var(--green);
   background: var(--green-bg);
-  border: 1px solid #22d67a33;
-  padding: 5px 10px;
-  border-radius: 6px;
+  border: 1px solid #2fbf6f33;
+  padding: 6px 12px;
+  border-radius: 20px;
 }
 
 .conn-dot {
@@ -114,35 +137,72 @@ body {
   color: var(--muted);
 }
 
-/* ── LAYOUT ── */
+.status-strip {
+  max-width: 1140px;
+  margin: 18px auto 0;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.status-pill {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--dim);
+  border-radius: 10px;
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: border-color .4s;
+}
+
+.status-pill .sp-icon { font-size: 18px; line-height: 1; }
+.status-pill .sp-label {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.status-pill .sp-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.status-pill.ok    { border-left-color: var(--green); }
+.status-pill.warn  { border-left-color: var(--amber); }
+.status-pill.alert { border-left-color: var(--red); }
+
 .main {
-  padding: 20px 20px 40px;
-  max-width: 1100px;
+  padding: 18px 24px 48px;
+  max-width: 1140px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 14px;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 680px) {
   .main { grid-template-columns: 1fr 1fr; }
   .full { grid-column: 1 / -1; }
-  .col3 { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
 }
 
-/* ── CARDS ── */
 .card {
   background: var(--s1);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 18px;
   position: relative;
   overflow: hidden;
 }
 
 .card-label {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10.5px;
+  font-weight: 700;
   letter-spacing: 1.2px;
   text-transform: uppercase;
   color: var(--muted);
@@ -156,21 +216,54 @@ body {
   width: 6px; height: 6px;
   border-radius: 50%;
   background: currentColor;
+  flex-shrink: 0;
 }
 
-/* ── NIVEL DE COMIDA ── */
+.sim-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.sim-btn {
+  background: var(--s2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sim-btn:hover { background: var(--dim); border-color: var(--muted); }
+.sim-btn:active { transform: scale(.97); }
+.sim-btn.primary { background: #c0263a18; border-color: #c0263a44; color: #e8717f; }
+.sim-btn.primary:hover { background: #c0263a28; }
+
+.sim-note {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
 .food-level-card { grid-column: 1 / -1; }
 
 .food-visual {
   display: flex;
   align-items: flex-end;
-  gap: 24px;
+  gap: 28px;
   margin-top: 4px;
+  flex-wrap: wrap;
 }
 
-.tolva-wrap {
-  flex-shrink: 0;
-}
+.tolva-wrap { flex-shrink: 0; }
 
 .tolva {
   width: 90px;
@@ -187,34 +280,22 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, #f5c842, #f5c84288);
+  background: linear-gradient(to top, var(--gold), #e8b33988);
   transition: height 1.5s cubic-bezier(.4,0,.2,1);
   border-radius: 0 0 3px 3px;
 }
 
-.sensor-high {
+.sensor-high, .sensor-low {
   position: absolute;
   right: -28px;
-  top: 20px;
   display: flex;
   align-items: center;
   gap: 4px;
 }
+.sensor-high { top: 20px; }
+.sensor-low  { bottom: 20px; }
 
-.sensor-low {
-  position: absolute;
-  right: -28px;
-  bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.sensor-line {
-  width: 20px;
-  height: 2px;
-  background: var(--dim);
-}
+.sensor-line { width: 20px; height: 2px; background: var(--dim); }
 
 .sensor-dot {
   width: 8px;
@@ -232,12 +313,10 @@ body {
   margin-top: 6px;
 }
 
-.food-info {
-  flex: 1;
-}
+.food-info { flex: 1; min-width: 200px; }
 
 .food-pct {
-  font-size: clamp(42px, 8vw, 64px);
+  font-size: clamp(40px, 7vw, 58px);
   font-weight: 700;
   font-family: 'Space Mono', monospace;
   line-height: 1;
@@ -245,7 +324,7 @@ body {
 }
 
 .food-status-text {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   margin-top: 6px;
   margin-bottom: 16px;
@@ -254,9 +333,9 @@ body {
 .food-bar-wrap {
   background: var(--dim);
   border-radius: 8px;
-  height: 10px;
+  height: 9px;
   overflow: hidden;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .food-bar {
@@ -265,11 +344,7 @@ body {
   transition: width 1.5s cubic-bezier(.4,0,.2,1), background .5s;
 }
 
-.sensor-labels {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+.sensor-labels { display: flex; flex-direction: column; gap: 8px; }
 
 .sensor-row {
   display: flex;
@@ -279,17 +354,21 @@ body {
 }
 
 .sensor-indicator {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   flex-shrink: 0;
   transition: all .5s;
 }
 
 .sensor-row span { color: var(--muted); }
-.sensor-row strong { color: var(--text); margin-left: auto; font-family: 'Space Mono', monospace; font-size: 11px; }
+.sensor-row strong {
+  color: var(--text);
+  margin-left: auto;
+  font-family: 'Space Mono', monospace;
+  font-size: 10.5px;
+}
 
-/* ── STATUS GRID ── */
 .status-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -307,100 +386,79 @@ body {
 }
 
 .stat-item .s-label {
-  font-size: 10px;
+  font-size: 9.5px;
   color: var(--muted);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .8px;
 }
 
-.stat-item .s-val {
-  font-size: 13px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+.stat-item .s-val { font-size: 13px; font-weight: 700; }
 
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 9px;
+  padding: 3px 10px;
   border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
   border: 1px solid;
 }
 
-.badge.green  { color: var(--green);  background: var(--green-bg);  border-color: #22d67a33; }
-.badge.red    { color: var(--red);    background: var(--red-bg);    border-color: #ff4f4f33; }
-.badge.yellow { color: var(--yellow); background: var(--yellow-bg); border-color: #f5c84233; }
-.badge.blue   { color: var(--blue);   background: var(--blue-bg);   border-color: #4fa3ff33; }
+.badge.green  { color: var(--green);  background: var(--green-bg);  border-color: #2fbf6f33; }
+.badge.red    { color: var(--red);    background: var(--red-bg);    border-color: #e6473f33; }
+.badge.amber  { color: var(--amber);  background: var(--amber-bg);  border-color: #e8b33933; }
+.badge.blue   { color: var(--blue);   background: var(--blue-bg);   border-color: #5b9bd933; }
 .badge.muted  { color: var(--muted);  background: var(--s2);        border-color: var(--border); }
 
-/* ── PIR CARD ── */
 .pir-card .pir-visual {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px 0 16px;
+  padding: 18px 0 14px;
 }
 
 .pir-ring {
-  width: 80px;
-  height: 80px;
+  width: 78px;
+  height: 78px;
   border-radius: 50%;
   border: 2px solid var(--dim);
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   transition: border-color .4s;
 }
 
 .pir-ring.active {
   border-color: var(--green);
-  box-shadow: 0 0 0 6px #22d67a15, 0 0 0 12px #22d67a08;
+  box-shadow: 0 0 0 6px #2fbf6f15, 0 0 0 12px #2fbf6f08;
   animation: pulse-ring 1.2s ease-out infinite;
 }
 
 @keyframes pulse-ring {
-  0%   { box-shadow: 0 0 0 0px #22d67a40, 0 0 0 0px #22d67a20; }
-  100% { box-shadow: 0 0 0 14px #22d67a00, 0 0 0 28px #22d67a00; }
+  0%   { box-shadow: 0 0 0 0px #2fbf6f40, 0 0 0 0px #2fbf6f20; }
+  100% { box-shadow: 0 0 0 14px #2fbf6f00, 0 0 0 28px #2fbf6f00; }
 }
 
-.pir-icon {
-  font-size: 32px;
-  transition: filter .4s;
-}
-
+.pir-icon { font-size: 30px; transition: filter .4s; }
 .pir-ring.active .pir-icon { filter: drop-shadow(0 0 8px var(--green)); }
 
-.pir-status {
-  text-align: center;
-  font-size: 13px;
-  font-weight: 600;
-}
+.pir-status { text-align: center; font-size: 13px; font-weight: 600; }
 
-/* ── SERVO CARD ── */
 .servo-visual {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 0 12px;
+  padding: 14px 0 10px;
   gap: 16px;
 }
 
-.door-wrap {
-  position: relative;
-  width: 60px;
-  height: 70px;
-}
+.door-wrap { position: relative; width: 58px; height: 68px; }
 
 .door-frame {
-  width: 60px;
-  height: 70px;
+  width: 58px;
+  height: 68px;
   border: 2px solid var(--dim);
   border-radius: 6px;
   position: relative;
@@ -412,59 +470,52 @@ body {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: linear-gradient(135deg, #1e2a38, #2a3a4a);
+  background: linear-gradient(135deg, var(--dim), #4a3f37);
   border-right: 2px solid var(--dim);
   transform-origin: left center;
   transition: transform 0.8s cubic-bezier(.4,0,.2,1);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
 }
 
-.door-panel.open {
-  transform: perspective(200px) rotateY(-75deg);
-}
+.door-panel.open { transform: perspective(200px) rotateY(-75deg); }
 
-.servo-angle {
-  font-family: 'Space Mono', monospace;
-  font-size: 28px;
-  font-weight: 700;
-  transition: color .4s;
-}
+.servo-angle { font-family: 'Space Mono', monospace; font-size: 26px; font-weight: 700; transition: color .4s; }
+.servo-sub { font-size: 11px; color: var(--muted); text-align: center; margin-top: 4px; }
 
-.servo-sub {
-  font-size: 11px;
-  color: var(--muted);
-  text-align: center;
-  margin-top: 4px;
-}
-
-/* ── LED & BUZZER ── */
-.led-buzz-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  height: 100%;
-}
+.led-buzz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; height: 100%; }
 
 .lb-item {
   background: var(--s2);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 16px 12px;
+  padding: 14px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   transition: border-color .3s;
 }
 
-.lb-item.on-led   { border-color: #ff6b6b66; }
-.lb-item.on-buzz  { border-color: #b07eff66; }
+.lb-item.on-led  { border-color: #e6473f55; }
+.lb-item.on-buzz { border-color: #a787e055; }
+
+.lb-icon { font-size: 26px; transition: filter .4s; line-height: 1; }
+.lb-item.on-led  .lb-icon { filter: drop-shadow(0 0 8px var(--red)); }
+.lb-item.on-buzz .lb-icon { filter: drop-shadow(0 0 8px var(--purple)); animation: shake .15s ease-in-out infinite; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+.lb-name { font-size: 12px; font-weight: 600; }
 
 .ctrl-btn {
-  margin-top: 4px;
+  margin-top: 2px;
   background: var(--dim);
   border: 1px solid var(--border);
   color: var(--text);
@@ -480,36 +531,51 @@ body {
 
 .ctrl-btn:hover { background: var(--border); }
 .ctrl-btn:active { transform: scale(.96); }
+.ctrl-btn.is-on { background: var(--green-bg); border-color: #2fbf6f55; color: var(--green); }
 
-.ctrl-btn.is-on {
-  background: var(--green-bg);
-  border-color: #22d67a55;
-  color: var(--green);
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+.stats-row-vertical {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }
 
-.lb-icon {
-  font-size: 28px;
-  transition: filter .4s;
+.stats-row-vertical .stat-box {
+  padding: 10px 6px;
+  background: var(--s2);
+}
+
+.stats-row-vertical .sb-val { font-size: 18px; }
+.stats-row-vertical .sb-label { font-size: 8.5px; }
+
+.stat-box {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+}
+
+.stat-box .sb-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--gold);
   line-height: 1;
 }
 
-.lb-item.on-led  .lb-icon { filter: drop-shadow(0 0 8px #ff6b6b); }
-.lb-item.on-buzz .lb-icon { filter: drop-shadow(0 0 8px #b07eff); animation: shake .15s ease-in-out infinite; }
-
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  25% { transform: translateX(-2px); }
-  75% { transform: translateX(2px); }
+.stat-box .sb-label {
+  font-size: 9.5px;
+  color: var(--muted);
+  margin-top: 5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .8px;
 }
 
-.lb-name { font-size: 12px; font-weight: 600; }
-.lb-state { font-size: 11px; }
-
-/* ── LOG ── */
 .log-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
   max-height: 220px;
   overflow-y: auto;
 }
@@ -543,102 +609,70 @@ body {
   min-width: 52px;
 }
 
-.log-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 3px;
-}
-
+.log-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
 .log-msg { font-size: 12px; line-height: 1.4; }
 .log-msg strong { font-weight: 600; }
 
-/* ── STATS ROW ── */
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.stat-box {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px;
+.footer-note {
+  max-width: 1140px;
+  margin: 6px auto 0;
+  padding: 0 24px;
+  font-size: 10.5px;
+  color: var(--muted);
   text-align: center;
 }
 
-.stat-box .sb-val {
-  font-family: 'Space Mono', monospace;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--green);
-  line-height: 1;
-}
-
-.stat-box .sb-label {
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 5px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .8px;
-}
-
-/* ── SIMULATE BTN ── */
-.sim-bar {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 4px;
-}
-
-.sim-btn {
-  background: var(--s2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 7px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all .2s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.sim-btn:hover { background: var(--dim); border-color: var(--muted); }
-.sim-btn:active { transform: scale(.97); }
-.sim-btn.primary { background: #22d67a18; border-color: #22d67a44; color: var(--green); }
-.sim-btn.primary:hover { background: #22d67a28; }
-
-.sim-note {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 6px;
+@media (max-width: 480px) {
+  .status-strip { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <div class="topbar-left">
-    <div class="logo-icon">🐾</div>
-    <h1>Pet<span>Feeder</span> Dashboard</h1>
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="brand">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Utplogonuevo.svg/1280px-Utplogonuevo.svg.png" alt="Logo UTP">
+      <div class="brand-divider"></div>
+      <div class="brand-text">
+        <div class="course">Arquitectura de Computadoras</div>
+        <h1>Pet<span>Feeder</span> · Panel de control</h1>
+      </div>
+    </div>
+    <div class="masthead-right">
+      <div class="conn-badge"><div class="conn-dot"></div>COM3 · 9600</div>
+      <div class="clock" id="clock">--:--:--</div>
+    </div>
   </div>
-  <div class="topbar-right">
-    <div class="conn-badge"><div class="conn-dot"></div>COM3 · 9600</div>
-    <div class="clock" id="clock">--:--:--</div>
+</div>
+
+<div class="status-strip">
+  <div class="status-pill ok" id="stripPir">
+    <div class="sp-icon">🐾</div>
+    <div>
+      <div class="sp-label">Mascota</div>
+      <div class="sp-val" id="stripPirVal">Sin movimiento</div>
+    </div>
+  </div>
+  <div class="status-pill ok" id="stripFood">
+    <div class="sp-icon">🥣</div>
+    <div>
+      <div class="sp-label">Comida</div>
+      <div class="sp-val" id="stripFoodVal">Lleno</div>
+    </div>
+  </div>
+  <div class="status-pill ok" id="stripServo">
+    <div class="sp-icon">🚪</div>
+    <div>
+      <div class="sp-label">Dispensador</div>
+      <div class="sp-val" id="stripServoVal">Cerrado</div>
+    </div>
   </div>
 </div>
 
 <div class="main">
 
-  <!-- SIMULADOR -->
   <div class="card full">
     <div class="card-label"><div class="dot" style="color:var(--blue)"></div>Simulador — prueba los estados</div>
     <div class="sim-bar">
@@ -651,9 +685,8 @@ body {
     <div class="sim-note">En el sistema real estos estados llegan automáticamente desde el Arduino por Serial.</div>
   </div>
 
-  <!-- NIVEL DE COMIDA -->
   <div class="card full food-level-card">
-    <div class="card-label"><div class="dot" style="color:var(--yellow)"></div>Nivel de comida en la tolva</div>
+    <div class="card-label"><div class="dot" style="color:var(--gold)"></div>Nivel de comida en la tolva</div>
     <div class="food-visual">
       <div class="tolva-wrap">
         <div style="position:relative; display:inline-block;">
@@ -678,7 +711,7 @@ body {
           <span class="badge green">🟢 Lleno</span>
         </div>
         <div class="food-bar-wrap">
-          <div class="food-bar" id="foodBar" style="width:75%; background: linear-gradient(90deg, var(--green), #22d67a88)"></div>
+          <div class="food-bar" id="foodBar" style="width:75%; background: linear-gradient(90deg, var(--green), #2fbf6f88)"></div>
         </div>
         <div class="sensor-labels">
           <div class="sensor-row">
@@ -696,7 +729,6 @@ body {
     </div>
   </div>
 
-  <!-- PIR -->
   <div class="card pir-card">
     <div class="card-label"><div class="dot" style="color:var(--green)"></div>Sensor de movimiento PIR</div>
     <div class="pir-visual">
@@ -719,9 +751,8 @@ body {
     </div>
   </div>
 
-  <!-- SERVO -->
   <div class="card">
-    <div class="card-label"><div class="dot" style="color:var(--yellow)"></div>Servo — Puerta dispensadora</div>
+    <div class="card-label"><div class="dot" style="color:var(--gold)"></div>Servo — Puerta dispensadora</div>
     <div class="servo-visual">
       <div class="door-wrap">
         <div class="door-frame">
@@ -738,7 +769,6 @@ body {
     </div>
   </div>
 
-  <!-- LED & BUZZER -->
   <div class="card">
     <div class="card-label"><div class="dot" style="color:var(--red)"></div>Alertas activas</div>
     <div class="led-buzz-grid" style="margin-top:8px;">
@@ -757,9 +787,9 @@ body {
     </div>
   </div>
 
-  <!-- STATS -->
-  <div class="full">
-    <div class="stats-row">
+  <div class="card">
+    <div class="card-label"><div class="dot" style="color:var(--blue)"></div>Estadísticas del sistema</div>
+    <div class="stats-row stats-row-vertical">
       <div class="stat-box">
         <div class="sb-val" id="statFeeds">0</div>
         <div class="sb-label">Alimentaciones hoy</div>
@@ -775,7 +805,6 @@ body {
     </div>
   </div>
 
-  <!-- LOG -->
   <div class="card full">
     <div class="card-label"><div class="dot" style="color:var(--blue)"></div>Registro de eventos</div>
     <div class="log-list" id="logList">
@@ -789,8 +818,9 @@ body {
 
 </div>
 
+<div class="footer-note">Universidad Tecnológica del Perú · Ingeniería de Software · Proyecto integrador Arduino</div>
+
 <script>
-// ── STATE ──
 const state = {
   foodPct: 75,
   sensorHigh: true,
@@ -805,7 +835,6 @@ const state = {
   startTime: Date.now(),
 };
 
-// ── CLOCK ──
 function updateClock() {
   const now = new Date();
   document.getElementById('clock').textContent =
@@ -822,7 +851,6 @@ function updateUptime() {
   document.getElementById('statUptime').textContent = `${m}:${sec}`;
 }
 
-// ── LOG ──
 function addLog(msg, color, icon) {
   const list = document.getElementById('logList');
   const time = new Date().toLocaleTimeString('es-PE', { hour12: false });
@@ -837,31 +865,35 @@ function addLog(msg, color, icon) {
   if (list.children.length > 30) list.removeChild(list.lastChild);
 }
 
-// ── RENDER ──
 function render() {
   const pct = state.foodPct;
 
-  // Food level
   document.getElementById('tolvaFill').style.height = pct + '%';
   document.getElementById('foodPct').textContent = pct + '%';
   document.getElementById('foodBar').style.width = pct + '%';
 
-  let color, label, barColor;
+  let color, label, barColor, stripFoodTxt, stripFoodClass;
   if (pct >= 60) {
     color = 'var(--green)'; label = '<span class="badge green">🟢 Lleno</span>';
-    barColor = 'linear-gradient(90deg, var(--green), #22d67a88)';
+    barColor = 'linear-gradient(90deg, var(--green), #2fbf6f88)';
+    stripFoodTxt = 'Lleno'; stripFoodClass = 'ok';
   } else if (pct >= 20) {
-    color = 'var(--yellow)'; label = '<span class="badge yellow">🟡 Nivel medio</span>';
-    barColor = 'linear-gradient(90deg, var(--yellow), #f5c84288)';
+    color = 'var(--amber)'; label = '<span class="badge amber">🟡 Nivel medio</span>';
+    barColor = 'linear-gradient(90deg, var(--amber), #e8b33988)';
+    stripFoodTxt = 'Nivel medio'; stripFoodClass = 'warn';
   } else {
     color = 'var(--red)'; label = '<span class="badge red">🔴 ¡Sin comida!</span>';
-    barColor = 'linear-gradient(90deg, var(--red), #ff4f4f88)';
+    barColor = 'linear-gradient(90deg, var(--red), #e6473f88)';
+    stripFoodTxt = 'Sin comida'; stripFoodClass = 'alert';
   }
   document.getElementById('foodPct').style.color = color;
   document.getElementById('foodStatusText').innerHTML = label;
   document.getElementById('foodBar').style.background = barColor;
 
-  // Sensors
+  const stripFood = document.getElementById('stripFood');
+  stripFood.className = 'status-pill ' + stripFoodClass;
+  document.getElementById('stripFoodVal').textContent = stripFoodTxt;
+
   const highActive = state.sensorHigh;
   const lowActive  = state.sensorLow;
   document.getElementById('sensorHigh').style.borderColor = highActive ? 'var(--green)' : 'var(--red)';
@@ -873,42 +905,49 @@ function render() {
   document.getElementById('sl-high').textContent = highActive ? 'DETECTA' : 'NO DETECTA';
   document.getElementById('sl-low').textContent  = lowActive  ? 'DETECTA' : 'NO DETECTA';
 
-  // PIR
   const pirRing = document.getElementById('pirRing');
   const pirBadge = document.getElementById('pirBadge');
+  const stripPir = document.getElementById('stripPir');
   if (state.pir) {
     pirRing.classList.add('active');
     pirBadge.className = 'badge green';
     pirBadge.textContent = '🐾 Movimiento detectado';
+    stripPir.className = 'status-pill ok';
+    document.getElementById('stripPirVal').textContent = 'Presente';
   } else {
     pirRing.classList.remove('active');
     pirBadge.className = 'badge muted';
     pirBadge.textContent = 'Sin movimiento';
+    stripPir.className = 'status-pill';
+    document.getElementById('stripPirVal').textContent = 'Sin movimiento';
   }
   document.getElementById('pirCount').textContent = state.pirCount;
 
-  // Servo
   const angle = state.servoOpen ? 90 : 0;
   const angleEl = document.getElementById('servoAngle');
   const subEl   = document.getElementById('servoSub');
   const badge   = document.getElementById('servoBadge');
   const door    = document.getElementById('doorPanel');
+  const stripServo = document.getElementById('stripServo');
   angleEl.textContent = angle + '°';
   if (state.servoOpen) {
-    angleEl.style.color = 'var(--yellow)';
+    angleEl.style.color = 'var(--gold)';
     subEl.textContent   = 'Abierto';
-    badge.className     = 'badge yellow';
+    badge.className     = 'badge amber';
     badge.textContent   = '⚙️ Dispensando';
     door.classList.add('open');
+    stripServo.className = 'status-pill warn';
+    document.getElementById('stripServoVal').textContent = 'Dispensando';
   } else {
     angleEl.style.color = 'var(--muted)';
     subEl.textContent   = 'Cerrado';
     badge.className     = 'badge muted';
     badge.textContent   = 'En reposo';
     door.classList.remove('open');
+    stripServo.className = 'status-pill ok';
+    document.getElementById('stripServoVal').textContent = 'Cerrado';
   }
 
-  // LED
   const ledItem  = document.getElementById('ledItem');
   const ledBadge = document.getElementById('ledBadge');
   if (state.led) {
@@ -925,15 +964,14 @@ function render() {
     document.getElementById('ledBtn').classList.remove('is-on');
   }
 
-  // Buzzer
   const buzzItem  = document.getElementById('buzzItem');
   const buzzBadge = document.getElementById('buzzBadge');
   if (state.buzzer) {
     buzzItem.classList.add('on-buzz');
     buzzBadge.className = 'badge lb-state';
     buzzBadge.style.color = 'var(--purple)';
-    buzzBadge.style.background = '#1a0a2a';
-    buzzBadge.style.borderColor = '#b07eff44';
+    buzzBadge.style.background = '#241a30';
+    buzzBadge.style.borderColor = '#a787e044';
     buzzBadge.textContent = '🔔 Sonando';
     document.getElementById('buzzBtn').textContent = 'Apagar';
     document.getElementById('buzzBtn').classList.add('is-on');
@@ -946,7 +984,6 @@ function render() {
     document.getElementById('buzzBtn').classList.remove('is-on');
   }
 
-  // Stats
   document.getElementById('statFeeds').textContent = state.feeds;
   if (state.lastFeed) {
     document.getElementById('statLastFeed').textContent =
@@ -956,7 +993,6 @@ function render() {
   }
 }
 
-// ── SIMULACIONES ──
 function simFeed() {
   state.pir = true;
   state.led = true;
@@ -969,9 +1005,8 @@ function simFeed() {
     state.buzzer = false;
     state.servoOpen = true;
     render();
-    addLog('<strong>Servo abierto</strong> — dispensando comida (90°)', 'var(--yellow)', '⚙️');
+    addLog('<strong>Servo abierto</strong> — dispensando comida (90°)', 'var(--gold)', '⚙️');
 
-    // Reduce food
     state.foodPct = Math.max(0, state.foodPct - 15);
     if (state.foodPct < 60) state.sensorHigh = false;
     if (state.foodPct < 20) state.sensorLow = false;
@@ -986,7 +1021,7 @@ function simFeed() {
       render();
       addLog('<strong>Alimentación completada</strong> — servo cerrado', 'var(--blue)', '✅');
       if (state.foodPct < 20) addLog('<strong>¡ALERTA!</strong> Nivel de comida crítico — recarga necesaria', 'var(--red)', '⚠️');
-      else if (state.foodPct < 60) addLog('Nivel medio de comida — considera recargar pronto', 'var(--yellow)', '📦');
+      else if (state.foodPct < 60) addLog('Nivel medio de comida — considera recargar pronto', 'var(--gold)', '📦');
     }, 2000);
   }, 600);
 }
@@ -1004,7 +1039,7 @@ function simMid() {
   state.sensorHigh = false;
   state.sensorLow = true;
   render();
-  addLog('Nivel de comida al <strong>45%</strong> — sensor superior sin detección', 'var(--yellow)', '📊');
+  addLog('Nivel de comida al <strong>45%</strong> — sensor superior sin detección', 'var(--gold)', '📊');
 }
 
 function simEmpty() {
@@ -1027,14 +1062,12 @@ function simReset() {
   addLog('Sistema reiniciado', 'var(--muted)', '↺');
 }
 
-// ── WEBSOCKET REAL ──
 let pirAnterior = false;
-let ws = null;   // referencia global para poder enviar comandos
+let ws = null;
 
 function conectarWS() {
   ws = new WebSocket("ws://localhost:8765");
 
-  // Actualiza badge de conexión
   const badge = document.querySelector('.conn-badge');
 
   ws.onopen = () => {
@@ -1047,11 +1080,9 @@ function conectarWS() {
   ws.onmessage = (e) => {
     const data = JSON.parse(e.data);
 
-    // Actualiza estado con datos reales
     state.led    = data.led;
     state.buzzer = data.buzzer;
 
-    // PIR — detecta flanco de subida (OFF → ON)
     if (data.pir && !pirAnterior) {
       state.pir = true;
       state.pirCount++;
@@ -1059,7 +1090,6 @@ function conectarWS() {
       addLog('<strong>Mascota detectada</strong> — movimiento frente al dispensador', 'var(--green)', '🐾');
     }
 
-    // PIR — flanco de bajada (ON → OFF)
     if (!data.pir && pirAnterior) {
       state.pir = false;
       addLog('Movimiento finalizado', 'var(--muted)', '👁️');
@@ -1067,7 +1097,6 @@ function conectarWS() {
 
     pirAnterior = data.pir;
 
-    // ── Nivel de comida (NIVEL:lleno / medio / vacio) ──
     if (data.nivel) {
       const nivelAnterior = state.nivelActual;
       state.nivelActual = data.nivel;
@@ -1086,28 +1115,25 @@ function conectarWS() {
         state.sensorLow = false;
       }
 
-      // Solo registra en el log cuando cambia de estado
       if (nivelAnterior && nivelAnterior !== data.nivel) {
         if (data.nivel === 'vacio') addLog('<strong>¡Sin comida!</strong> Ambos sensores sin detección', 'var(--red)', '🚨');
-        else if (data.nivel === 'medio') addLog('Nivel de comida medio — considera recargar', 'var(--yellow)', '📦');
+        else if (data.nivel === 'medio') addLog('Nivel de comida medio — considera recargar', 'var(--gold)', '📦');
         else addLog('Tolva recargada — nivel lleno', 'var(--green)', '📦');
       }
     }
 
-    // ── Estado del servo (SERVO:cerrado, o inferido como "abierto") ──
     if (data.servo === 'abierto') {
       state.servoOpen = true;
     } else if (data.servo === 'cerrado') {
       state.servoOpen = false;
     }
 
-    // Alerta especial — usa alerta_id para procesar solo eventos NUEVOS
     if (data.alerta_id && data.alerta_id !== state.ultimoAlertaId) {
       state.ultimoAlertaId = data.alerta_id;
 
       if (data.alerta === 'dispensando') {
         state.feeds++;
-        addLog('<strong>Dispensando comida</strong>', 'var(--yellow)', '⚙️');
+        addLog('<strong>Dispensando comida</strong>', 'var(--gold)', '⚙️');
       }
       if (data.alerta === 'sincomida') {
         addLog('<strong>Intento de alimentar sin comida</strong> — servo no se activó', 'var(--red)', '⚠️');
@@ -1121,7 +1147,6 @@ function conectarWS() {
     badge.style.color = 'var(--red)';
     badge.innerHTML = '<div class="conn-dot" style="background:var(--red)"></div>Desconectado — reintentando...';
     addLog('Conexión perdida — reconectando en 3s...', 'var(--red)', '⚠️');
-    // Reintenta automáticamente cada 3 segundos
     setTimeout(conectarWS, 3000);
   };
 
@@ -1130,7 +1155,6 @@ function conectarWS() {
   };
 }
 
-// ── CONTROL MANUAL (LED y Buzzer) ──
 function enviarComando(comando) {
   if (ws && ws.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify({ comando }));
@@ -1151,7 +1175,6 @@ function toggleBuzzer() {
   addLog(nuevoEstado ? 'Buzzer encendido manualmente' : 'Buzzer apagado manualmente', 'var(--purple)', '🔔');
 }
 
-// Init
 addLog('Dashboard iniciado — conectando al Arduino...', 'var(--blue)', '🖥️');
 render();
 conectarWS();
